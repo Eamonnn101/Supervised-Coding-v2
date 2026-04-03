@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ChangeReviewOutput",
+  "description": "Structured output from the GPT reviewer for change review",
+  "type": "object",
+  "required": ["verdict", "scores", "critical_findings", "recommended_changes", "checklist_results", "acceptance_checks", "paste_back_to_claude", "context_update"],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["APPROVE", "REVISE", "BLOCK"],
+      "description": "Overall review verdict"
+    },
+    "scores": {
+      "type": "object",
+      "required": ["alignment", "correctness", "maintainability", "simplicity", "test_readiness"],
+      "properties": {
+        "alignment": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "correctness": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "maintainability": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "simplicity": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "test_readiness": { "type": "integer", "minimum": 0, "maximum": 10 }
+      },
+      "additionalProperties": false
+    },
+    "critical_findings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Issues that must be addressed"
+    },
+    "recommended_changes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Suggested improvements ordered by priority"
+    },
+    "checklist_results": {
+      "type": "object",
+      "required": ["plan_followed", "no_scope_creep", "correctness_verified", "code_quality_ok", "simplicity_ok", "tests_pass", "no_regression_risk"],
+      "properties": {
+        "plan_followed": { "type": "boolean" },
+        "no_scope_creep": { "type": "boolean" },
+        "correctness_verified": { "type": "boolean" },
+        "code_quality_ok": { "type": "boolean" },
+        "simplicity_ok": { "type": "boolean" },
+        "tests_pass": { "type": "boolean" },
+        "no_regression_risk": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "acceptance_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["criterion", "met", "evidence"],
+        "properties": {
+          "criterion": { "type": "string" },
+          "met": { "type": "boolean" },
+          "evidence": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "description": "Verification of each acceptance criterion from the feature contract"
+    },
+    "paste_back_to_claude": {
+      "type": "string",
+      "description": "Copy-pasteable revision instructions for the writer"
+    },
+    "context_update": {
+      "type": "string",
+      "description": "Patterns or decisions to remember for future reviews"
+    }
+  },
+  "additionalProperties": false
+}

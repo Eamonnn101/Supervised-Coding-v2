@@ -1,0 +1,9 @@
+# Review state (per-project, not part of the skill)
+.review/
+
+# Python
+__pycache__/
+*.pyc
+
+# Local Claude Code settings (contains machine-specific paths)
+.claude/settings.local.json

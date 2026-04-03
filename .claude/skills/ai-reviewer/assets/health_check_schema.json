@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HealthCheckOutput",
+  "description": "Structured output from the GPT reviewer for project health check",
+  "type": "object",
+  "required": ["overall_health", "scores", "findings", "summary", "priority_actions", "context_update"],
+  "properties": {
+    "overall_health": {
+      "type": "string",
+      "enum": ["HEALTHY", "NEEDS_ATTENTION", "CRITICAL"],
+      "description": "Overall project health assessment"
+    },
+    "scores": {
+      "type": "object",
+      "required": ["architecture", "code_quality", "security", "maintainability", "test_coverage"],
+      "properties": {
+        "architecture": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "code_quality": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "security": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "maintainability": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "test_coverage": { "type": "integer", "minimum": 0, "maximum": 10 }
+      },
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "severity", "location", "description", "suggestion"],
+        "properties": {
+          "id": { "type": "integer", "description": "Finding number for user reference" },
+          "category": {
+            "type": "string",
+            "enum": ["architecture", "code_quality", "security", "maintainability", "performance", "testing"],
+            "description": "Finding category"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "major", "minor", "suggestion"],
+            "description": "Finding severity"
+          },
+          "location": { "type": "string", "description": "File path and line number, or 'project-wide'" },
+          "description": { "type": "string", "description": "What the issue is" },
+          "suggestion": { "type": "string", "description": "How to fix it" }
+        },
+        "additionalProperties": false
+      },
+      "description": "All findings from the health check"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Overall assessment paragraph"
+    },
+    "priority_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Top 3-5 recommended actions in priority order"
+    },
+    "context_update": {
+      "type": "string",
+      "description": "Patterns or decisions to remember for future reviews"
+    }
+  },
+  "additionalProperties": false
+}

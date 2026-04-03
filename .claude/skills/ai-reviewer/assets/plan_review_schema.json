@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlanReviewOutput",
+  "description": "Structured output from the GPT reviewer for plan review",
+  "type": "object",
+  "required": ["verdict", "scores", "critical_findings", "recommended_changes", "checklist_results", "paste_back_to_claude", "context_update"],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["APPROVE", "REVISE", "BLOCK"],
+      "description": "Overall review verdict"
+    },
+    "scores": {
+      "type": "object",
+      "required": ["alignment", "correctness", "maintainability", "simplicity", "test_readiness"],
+      "properties": {
+        "alignment": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "correctness": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "maintainability": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "simplicity": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "test_readiness": { "type": "integer", "minimum": 0, "maximum": 10 }
+      },
+      "additionalProperties": false
+    },
+    "critical_findings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Issues that must be addressed before proceeding"
+    },
+    "recommended_changes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Suggested improvements ordered by priority"
+    },
+    "checklist_results": {
+      "type": "object",
+      "required": ["requirements_covered", "assumptions_verified", "scope_minimal", "steps_specific", "risks_identified", "test_strategy_defined"],
+      "properties": {
+        "requirements_covered": { "type": "boolean" },
+        "assumptions_verified": { "type": "boolean" },
+        "scope_minimal": { "type": "boolean" },
+        "steps_specific": { "type": "boolean" },
+        "risks_identified": { "type": "boolean" },
+        "test_strategy_defined": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "paste_back_to_claude": {
+      "type": "string",
+      "description": "Copy-pasteable revision instructions for the writer"
+    },
+    "context_update": {
+      "type": "string",
+      "description": "Patterns or decisions to remember for future reviews"
+    }
+  },
+  "additionalProperties": false
+}
